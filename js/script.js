@@ -9,9 +9,8 @@ function generateField() {
 	let fieldCells = []; 
 
 	// массив кораблей, можно изменять
-	//let shipsArray = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1]; 
-	let shipsArray = [4,4,4,4,4,4,4,4];
-
+	let shipsArray = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1]; 
+	
 
 	// генерация пустого поля
 	for (let i = 0; i < 10; i++) {
@@ -20,10 +19,14 @@ function generateField() {
 		}
 	}
 
+
 	// заполнение поля короблями
 	for (let ship of shipsArray) {
 		placeShip(ship);
 	}
+
+
+	return fieldCells;
 	
 
 
@@ -41,13 +44,11 @@ function generateField() {
 					break;
 				} 
 			} while(true)
-			
-			// console.log('startCel === ', startCell);
 
-			// проверка на то, можно ли разместить здесь корабль
-			// если можно - размещаем и выходим из функции placeShip
+			// проверка на то, можно ли разместить здесь корабль		
 			let dirArray = mixUpValues(['up', 'down', 'left', 'right']);
 			for (let dir of dirArray) {
+				// если можно - размещаем и выходим из функции placeShip
 				if ( tryToPlaceShip(startCell, dir, shipLength) ) {
 					flag = true;
 					break;
@@ -55,12 +56,11 @@ function generateField() {
 			}
 			iterationCount++;
 		}
-		while (!flag && iterationCount < 100)
+		while (!flag && iterationCount < 200)
 
-		if (iterationCount >= 100) {
+		// Если не удалось установить корабль на поле
+		if (iterationCount >= 200) {	
 			console.log(`Cant place a ship with length - ${shipLength}.`);
-		} else {
-			console.log(`Ship with length ${shipLength} successfully placed.`);
 		}
 
 		
@@ -68,6 +68,7 @@ function generateField() {
 		function tryToPlaceShip(startCell, direction, length) {
 			// пробуем разместить корабль из указанной ячейки в указанном направление с указанной длиной
 
+			// Проверка
 			let cellCoords = [startCell.x, startCell.y];
 			if (cheackCell(getCell(cellCoords))) {
 				for(let i = 0; i < length; i++) {
@@ -81,17 +82,17 @@ function generateField() {
 			}
 
 			// Проверка пройдена, размещаем корабль
-			console.log(`Can place ${length} ship! Start cell - ${[startCell.x, startCell.y]}. Direction - ${direction}.`);	
 			placingShipOnField(startCell, direction, length);
 			return true;
 
 			function placingShipOnField(cell, direction, length) {
-				// размещаем корабль
+				// размещаем корабль в массив со всеми ячейками игрового поля (fieldCells)
+
 				let cellCoords = [cell.x, cell.y];
 				for (let i = 0; i < length; i++) {
 					// получаем ссылку на нужную ячейку
 					let currentCell = getCell(cellCoords);
-					// выставляем текущей ячейке статус коробля
+					// выставляем текущей ячейке статус корабля
 					currentCell.status = "ship";
 
 					// выставляем всем ячейкам вокруг корабля статус blocked
@@ -107,10 +108,11 @@ function generateField() {
 				function setIndentAroundShip(cell, direction, include=false) {
 					// выставляем всем ячейка вокруг cell статус blocked
 					// include - указывает, включать ли ячейку, противоположной по направлению direction
-					// (для первой ячейки коробля указываем true, для остальных false)
+					// (для первой ячейки коробля include указываем true, для остальных false)
 					let array = ['up','left','down','down','right','right','up','up'];
 					let cellToExclude = null;
 					if (!include) {
+						// нахождение ячейки, которой не нужно выставлять статус blocked
 						let directionToExclude;
 						switch (direction) {
 							case 'up':
@@ -143,10 +145,10 @@ function generateField() {
 					}
 					
 				}
-			}
-			
+			}			
 			
 			function cheackCell(cell) {
+				// проверка ячейки, является ли она пустой (status: void)
 				if (!cell) return false;
 
 				if (cell.status === 'void') {
@@ -155,46 +157,53 @@ function generateField() {
 					return false;
 				}
 			}
-		}
 
-		function expandCell(coords, direction) {
-			let newCoords;
-			if (Array.isArray(coords)) {
-				switch (direction) {
-					case 'up':
-						newCoords = [coords[0], coords[1]-1];
-					break;
-					case 'down':
-						newCoords = [coords[0], coords[1]+1];
-					break;
-					case 'left':
-						newCoords = [coords[0]-1, coords[1]];
-					break;
-					case 'right':
-						newCoords = [coords[0]+1, coords[1]];
-					break;
+			function expandCell(coords, direction) {
+				// принмает координаты ячейки и направление
+				// возвращает следующую ячейку в указанном направлении
+
+				let newCoords;				
+				if (Array.isArray(coords)) {
+					// если входные координаты в виде массива
+					switch (direction) {
+						case 'up':
+							newCoords = [coords[0], coords[1]-1];
+						break;
+						case 'down':
+							newCoords = [coords[0], coords[1]+1];
+						break;
+						case 'left':
+							newCoords = [coords[0]-1, coords[1]];
+						break;
+						case 'right':
+							newCoords = [coords[0]+1, coords[1]];
+						break;
+					}
+					
+				} else {
+					// если входные координаты в виде объекта
+					switch (direction) {
+						case 'up':
+							newCoords = [coords.x, coords.y-1];
+						break;
+						case 'down':
+							newCoords = [coords.x, coords.y+1];
+						break;
+						case 'left':
+							newCoords = [coords.x-1, coords.y];
+						break;
+						case 'right':
+							newCoords = [coords.x+1, coords.y];
+						break;
+					}
 				}
-			} else {
-				switch (direction) {
-					case 'up':
-						newCoords = [coords.x, coords.y-1];
-					break;
-					case 'down':
-						newCoords = [coords.x, coords.y+1];
-					break;
-					case 'left':
-						newCoords = [coords.x-1, coords.y];
-					break;
-					case 'right':
-						newCoords = [coords.x+1, coords.y];
-					break;
-				}
+				
+				return newCoords;
 			}
-			
-			return newCoords;
-		}
+		}	
 
 		function randomCell(width, heigth) {
+			// Возвращает рандомные координаты ячейки на поле
 			return { x: randomInteger(0, width), y: randomInteger(0, heigth) };
 		}
 
@@ -221,16 +230,20 @@ function generateField() {
 		}
 
 		function mixUpValues(array=['up', 'down', 'left', 'right']) {
-			// перемешивает и возвращает входной массив array
+			// перемешивает входной массив и возвращает его
 
-			let startArray = [].concat(array);
+			// создаем независимую копию входного массива
+			let inputArray = [].concat(array);
 			let newArray = [];
 			
-			while (startArray.length > 0) {
-				let x = returnRandomValue(startArray);
-				startArray = startArray.filter(item => {
+			while (inputArray.length > 0) {
+				// поиск рандомного значения из входного массива
+				let x = returnRandomValue(inputArray);
+				// удаление этого значения из входного массива
+				inputArray = inputArray.filter(item => {
 					return x != item;
 				});
+				// добавляем значение в новый массив
 				newArray.push(x);	
 			}
 
@@ -243,18 +256,17 @@ function generateField() {
 		}
 
 		function randomInteger(min, max) {
-			// случайное число от min до (max)
+			// случайное число от min до max
 			let rand = min + Math.random() * (max - min);
 			return Math.floor(rand);
 		}
 		
 	}
-
-	return fieldCells;
 }
 
 let fieldCells = generateField();
 
+// Создаем таблицу в DOM
 for (let i = 0; i < 10; i++) {
 	let row = document.createElement('div');
 	row.classList.add('row');
@@ -267,6 +279,7 @@ for (let i = 0; i < 10; i++) {
 	}
 }
 
+// Заполнение игрового поля
 for (let cell of fieldCells) {
 	document.getElementById(`x${cell.x}y${cell.y}`).classList.add(`${cell.status}`);
 }
