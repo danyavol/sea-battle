@@ -1,3 +1,9 @@
+#field {
+    display: inline-block;
+    width: 220px;
+    border: 1px solid rgba(0,0,0,0.2);
+}
+
 #field .row .cell {
     display: inline-block;
     width: 20px;
@@ -6,14 +12,28 @@
 }
 
 .ship {
-    background: gray;
+    background-color: #7185ff;
 }
 
-.void {
-    background: wheat;
+.void, .blocked {
+    background-color: #fffaf0;
 }
 
-.blocked {
-    /* background: salmon; */
-    background: wheat;
+.miss {
+    background-image: url('../images/icons/miss.png');
+    background-size: cover;
+    background-repeat: no-repeat;
 }
+
+.hit {
+    background-image: url('../images/icons/hit.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.kill {
+    background-image: url('../images/icons/kill.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
