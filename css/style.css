@@ -1,13 +1,13 @@
 #field {
     display: inline-block;
-    width: 220px;
+    width: 420px;
     border: 1px solid rgba(0,0,0,0.2);
 }
 
 #field .row .cell {
     display: inline-block;
-    width: 20px;
-    height: 20px;
+    width: 40px;
+    height: 40px;
     border: 1px solid rgba(0,0,0,0.2);
 }
 
@@ -31,9 +31,22 @@
     background-repeat: no-repeat;
 }
 
-.kill {
+.died {
     background-image: url('../images/icons/kill.png');
     background-size: cover;
     background-repeat: no-repeat;
+}
+
+#newGame {
+    margin-top: 10px;
+    display: inline-block;
+    font-size: 24px;
+    padding: 5px 20px;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid brown;
+    color: saddlebrown;
+    background: snow;
+    border-radius: 10px;
 }
 

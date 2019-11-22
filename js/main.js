@@ -4,10 +4,13 @@ import { shot } from './shot.js';
 
 const field = document.getElementById('field');
 
+startGame();
 
-let myField = generateField();
-console.log(myField);
-let enemyField = generateField();
+document.getElementById('newGame').addEventListener('click', startGame);
+
+function startGame() {
+	field.innerHTML='';
+	let myField = generateField();
 
 // Создаем таблицу в DOM
 for (let i = 0; i < 10; i++) {
@@ -25,10 +28,12 @@ for (let i = 0; i < 10; i++) {
 // Заполнение игрового поля
 for (let cell of myField) {
 	document.getElementById(`f1x${cell.x}y${cell.y}`).classList.add(`${cell.status}`);
+	//document.getElementById(`f1x${cell.x}y${cell.y}`).classList.add(`void`);
 }
 
 for ( let elem of field.getElementsByClassName('cell') ) {
 	elem.addEventListener('click', (event) => {
 		shot(event.target.id, myField);
 	});
+}
 }
