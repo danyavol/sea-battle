@@ -41,7 +41,7 @@ function startGame() {
 		elem.addEventListener('click', myShot);
 	}
 
-	document.getElementById('status').innerText = 'Ход игрока слева..';
+	
 
 	function myShot(event) {
 

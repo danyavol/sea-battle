@@ -1,0 +1,77 @@
+@cell: 30px;
+
+body {
+    margin: 0;
+}
+
+#playGround {
+
+    .fields {
+        display: flex;
+        flex-wrap: wrap;
+
+        #field1, #field2 {
+            margin: 0 0 15px 15px;
+            width: @cell*10 + 20px;
+            height: @cell*10 + 20px;
+            border: 1px solid rgba(0,0,0,0.2);
+        
+            .row {
+                display: flex;
+                width: 100%;
+        
+                .cell {
+                    height: @cell;
+                    width: @cell;
+                    border: 1px solid rgba(0,0,0,0.2);
+                    background-size: cover;
+                    background-repeat: no-repeat;
+                }
+        
+                .ship {
+                    background-color: #7185ff;
+                }
+                
+                .void, .blocked {
+                    background-color: #fffaf0;
+                }
+                
+                .miss {
+                    background-image: url('../images/icons/miss.png');
+                }
+                
+                .hit {
+                    background-image: url('../images/icons/hit.png');
+                }
+                
+                .died {
+                    background-image: url('../images/icons/kill.png');
+                }
+            }
+        }
+    } 
+}
+
+.controls {
+    margin: 15px 0 0 15px;
+
+    #newGame {
+        display: inline-block;
+        font-size: 24px;
+        padding: 5px 20px;
+        cursor: pointer;
+        user-select: none;
+        border: 1px solid brown;
+        color: saddlebrown;
+        background: snow;
+        border-radius: 10px;
+    }
+}
+
+
+
+#status {
+    font-size: 24px;
+    margin: 10px 0 10px 15px;
+}
+

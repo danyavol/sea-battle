@@ -1,21 +1,24 @@
-<html>
+<!DOCTYPE html>
+<html lang="en-US">
     <head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Sea Battle</title>
-		<link  rel="stylesheet" href="css/style.css" type="text/css">
+		<link  rel="stylesheet/less" href="css/style.less" type="text/css">
     </head>
     <body>
 		<div class="controls">
 			<div id="newGame">New Game</div>
 		</div>
-		 <div id="play-ground">
+		 <div id="playGround">
+			<div id="status">Ход игрока слева..</div>
 			<div class="fields">
 				<div id="field1"></div>
 				<div id="field2"></div>
 			</div>
-			<div id="status">Ход игрока слева..</div>
 		 </div>
 		 
-		 
+		<script src="js/less.min.js" ></script>
 		<script src="js/main.js" type="module"></script>
     </body>
 </html>
