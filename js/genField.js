@@ -1,7 +1,7 @@
 'use strict'
 
 export function generateField() {
-	// fieldCells = [ {x: 0, y: 0, status: ship/void, shipParts: [{x: 4, y: 4},{x: 4, y: 5}], .. , blocked: false, shot: false}, {...}, {...} ]
+	// field.cells = [ {x: 0, y: 0, status: ship/void, shipParts: [{x: 4, y: 4},{x: 4, y: 5}], .. , blocked: false, shot: false}, {...}, {...} ]
 	// x, y:  координаты клетки.
 	// status:
 	// 		void - в этой клетке нету корабля; 
@@ -9,30 +9,37 @@ export function generateField() {
 	// shipParts:  массив координат всех частей данного корабля(если клетка не является частью корабля - null).
 	// cellsAroundShip:  массив координат клеток, вокруг корабля(если клетка не является частью корабля - null).
 	// blocked:  если true - значит это зона вокруг корабля, куда нельзя ставить другие корабли.
-	// shot:  производился ли выстрел по этой клетке.
-	let fieldCells = []; 
+	// shot:  производился ли выстрел по этой клетке.	
 
-	// массив кораблей, можно изменять
-	const shipsArray = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1]; 
-	// размер поля, можно изменять
-	const fieldSize = {x: 10, y: 10};
+	let field = {
+		cells: [],
+		// размер поля, можно изменять
+		fieldSize: {
+			x: 10,
+			y: 10
+		},
+		// массив кораблей, можно изменять
+		shipsLength: [
+			4, 3, 3, 2, 2, 2, 1, 1, 1, 1
+		]
+	};
 	
 
 	// генерация пустого поля
-	for (let i = 0; i < fieldSize.x; i++) {
-		for (let j = 0; j < fieldSize.y; j ++) {
-			fieldCells.push({x: i, y: j, status: "void", shipParts: null, cellsAroundShip: null, blocked: false, shot: false});
+	for (let i = 0; i < field.fieldSize.x; i++) {
+		for (let j = 0; j < field.fieldSize.y; j ++) {
+			field.cells.push({x: i, y: j, status: "void", shipParts: null, cellsAroundShip: null, blocked: false, shot: false});
 		}
 	}
 
 
 	// заполнение поля короблями
-	for (let ship of shipsArray) {
+	for (let ship of field.shipsLength) {
 		placeShip(ship);
 	}
 
 
-	return fieldCells;
+	return field;
 	
 
 
@@ -45,7 +52,7 @@ export function generateField() {
 
 			// поиск стартовой ячейки, где НЕ стоит корабль
 			do {
-				startCell = getCell(randomCell(fieldSize.x,fieldSize.y));
+				startCell = getCell(randomCell(field.fieldSize.x, field.fieldSize.y));
 				if (startCell.status === "void" && startCell.blocked === false) {
 					break;
 				} 
@@ -277,11 +284,11 @@ export function generateField() {
 			// получение ссылки на ячейку с указанными координатами
 			let cell;
 			if (Array.isArray(coords)) {
-				cell = fieldCells.filter((item) => {
+				cell = field.cells.filter((item) => {
 					return item.x == coords[0] && item.y == coords[1];
 				});
 			} else {
-				cell = fieldCells.filter((item) => {
+				cell = field.cells.filter((item) => {
 					return item.x == coords.x && item.y == coords.y;
 				});
 			}

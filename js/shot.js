@@ -1,13 +1,19 @@
 'use strict'
 
 export function shot(_id, _field) {
+    // return:
+    //      true - если ход переходит другому игроку
+    //      "win" - если игрок уничтожил все корабли
+    //      false - если этот игрок продолжает стрелять
+
+
     let coords = _id.match(/x\d{1,}|y\d{1,}/g);
     coords = coords.map(item => +item.slice(1)); // координаты нажатой ячейки
 
     let fieldId = _id.match(/f\d{1,}/)[0];
     fieldId = +fieldId.slice(1); // id поля
 
-    let pressedCell = getCell(coords, _field);
+    let pressedCell = getCell(coords, _field.cells);
 
     // проверка на то, нажималась ли эта ячейка уже
     if (pressedCell.shot) {
@@ -28,7 +34,7 @@ export function shot(_id, _field) {
         // проверяем затонул весь корабль или нет
         let isShipSank = true;
         for (let elem of pressedCell.shipParts) {
-            let cell = getCell([elem.x, elem.y], _field);
+            let cell = getCell([elem.x, elem.y], _field.cells);
             !cell.shot ? isShipSank = false : null;
         }
 
@@ -39,19 +45,19 @@ export function shot(_id, _field) {
                 let elem = document.getElementById(`f${fieldId}x${partCoords.x}y${partCoords.y}`);
                 elem.classList.add('died');
                 elem.classList.remove('hit');
-                let part = getCell(partCoords, _field)
+                let part = getCell(partCoords, _field.cells)
 
                 // установка клеткам вокруг стиля 'miss'
                 for (let cell of part.cellsAroundShip) {
                     document.getElementById(`f${fieldId}x${cell.x}y${cell.y}`).classList.add('miss');
-                    getCell(cell, _field).shot = true;
+                    getCell(cell, _field.cells).shot = true;
                 }
                 
             }
 
             // Проверка на то, подбиты ли все корабли на поле
             let endOfGame = true;
-            for (let ship of _field) {
+            for (let ship of _field.cells) {
                 if (ship.status === "ship") {
                     if (!ship.shot) {
                         endOfGame = false;
@@ -62,12 +68,12 @@ export function shot(_id, _field) {
 
             // Если игра окончена
             if (endOfGame) {
-                alert('Победа!!!');
+                return 'win';
             }
 
         }
 
-        return true;
+        return false;
     }
     
 

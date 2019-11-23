@@ -1,10 +1,10 @@
-#field {
+#field1, #field2 {
     display: inline-block;
     width: 420px;
     border: 1px solid rgba(0,0,0,0.2);
 }
 
-#field .row .cell {
+#field1 .row .cell, #field2 .row .cell {
     display: inline-block;
     width: 40px;
     height: 40px;
@@ -48,5 +48,10 @@
     color: saddlebrown;
     background: snow;
     border-radius: 10px;
+}
+
+#status {
+    font-size: 24px;
+    transition: 0.5s;
 }
 
