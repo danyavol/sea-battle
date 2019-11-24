@@ -1,4 +1,5 @@
 'use strict'
+import { getCell } from './field.functions.js';
 
 export function shot(_id, _field) {
     // return:
@@ -13,7 +14,7 @@ export function shot(_id, _field) {
     let fieldId = _id.match(/f\d{1,}/)[0];
     fieldId = +fieldId.slice(1); // id поля
 
-    let pressedCell = getCell(coords, _field.cells);
+    let pressedCell = getCell(coords, _field);
 
     // проверка на то, нажималась ли эта ячейка уже
     if (pressedCell.shot) {
@@ -34,7 +35,7 @@ export function shot(_id, _field) {
         // проверяем затонул весь корабль или нет
         let isShipSank = true;
         for (let elem of pressedCell.shipParts) {
-            let cell = getCell([elem.x, elem.y], _field.cells);
+            let cell = getCell([elem.x, elem.y], _field);
             !cell.shot ? isShipSank = false : null;
         }
 
@@ -45,12 +46,12 @@ export function shot(_id, _field) {
                 let elem = document.getElementById(`f${fieldId}x${partCoords.x}y${partCoords.y}`);
                 elem.classList.add('died');
                 elem.classList.remove('hit');
-                let part = getCell(partCoords, _field.cells)
+                let part = getCell(partCoords, _field)
 
                 // установка клеткам вокруг стиля 'miss'
                 for (let cell of part.cellsAroundShip) {
                     document.getElementById(`f${fieldId}x${cell.x}y${cell.y}`).classList.add('miss');
-                    getCell(cell, _field.cells).shot = true;
+                    getCell(cell, _field).shot = true;
                 }
                 
             }
@@ -74,27 +75,5 @@ export function shot(_id, _field) {
         }
 
         return false;
-    }
-    
-
-    function getCell(coords, field) {
-        // получение ссылки на ячейку с указанными координатами
-        let cell;
-        if (Array.isArray(coords)) {
-            cell = field.filter((item) => {
-                return item.x == coords[0] && item.y == coords[1];
-            });
-        } else {
-            cell = field.filter((item) => {
-                return item.x == coords.x && item.y == coords.y;
-            });
-        }
-
-        // возвращаем ссылку на ячейку, либо false, если совпадений не найдено
-        if (cell.length != 0) {
-            return cell[0];
-        } else {
-            return false;
-        }
     }
 }
