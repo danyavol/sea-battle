@@ -96,6 +96,19 @@ export function mixUpValues(array=['up', 'down', 'left', 'right']) {
     return newArray;
 }
 
+export function getOppositeDir(direction) {
+    switch (direction) {
+        case 'up':
+            return 'down'
+        case 'down':
+            return 'up'
+        case 'left':
+            return 'right'
+        case 'right':
+            return 'left'
+    }
+}
+
 export function randomInteger(min, max) {
     // случайное число от min до max
     let rand = min + Math.random() * (max - min);
@@ -112,4 +125,71 @@ export function checkCell(cell) {
     } else {
         return false;
     }
+}
+
+export function shotThatCell(cellObject, fieldObject, fId) {
+    // если по этой ячейке уже стреляли, возвращаем false
+    if (cellObject.shot === true) {
+        return false;
+    }
+
+    cellObject.shot = true;
+
+    if (cellObject.status === 'void') {
+        // если ячейка пустая
+        document.getElementById(`f${fId}x${cellObject.x}y${cellObject.y}`).classList.add('miss');
+        return 'void';
+    } else if (cellObject.status === 'ship') {
+        // если ячейка с кораблем
+        document.getElementById(`f${fId}x${cellObject.x}y${cellObject.y}`).classList.add('hit');
+
+        // проверяем затонул весь корабль или нет
+        let isShipSank = true;
+        for (let elem of cellObject.shipParts) {
+            let cell = getCell([elem.x, elem.y], fieldObject);
+            !cell.shot ? isShipSank = false : null;
+        }
+
+        // если все части корабля подбиты
+        if (isShipSank) { 
+            // установка стилей в DOM
+            for (let partCoords of cellObject.shipParts) {
+                // установка всем клеткам корабля стиля 'died'
+                let elem = document.getElementById(`f${fId}x${partCoords.x}y${partCoords.y}`);
+                elem.classList.add('died');
+                elem.classList.remove('hit');
+                let part = getCell(partCoords, fieldObject)
+
+                // установка клеткам вокруг стиля 'miss'
+                for (let cell of part.cellsAroundShip) {
+                    document.getElementById(`f${fId}x${cell.x}y${cell.y}`).classList.add('miss');
+                    getCell(cell, fieldObject).shot = true;
+                }
+                
+            }
+
+            // Проверка на то, подбиты ли все корабли на поле
+            let endOfGame = true;
+            for (let ship of fieldObject.cells) {
+                if (ship.status === "ship") {
+                    if (!ship.shot) {
+                        endOfGame = false;
+                        break;
+                    }
+                }
+            }
+            
+            if (endOfGame) {
+                // если игра окончена
+                return 'win';
+            } else {
+                // если корабль утонул
+                return 'sank';
+            }
+        } else {
+            // если не все части корабля затонули
+            return 'hit';
+        }
+    }
+
 }
