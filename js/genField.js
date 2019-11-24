@@ -1,4 +1,5 @@
 'use strict'
+import { expandCell, randomCell, getCell, mixUpValues, checkCell } from './field.functions.js';
 
 export function generateField() {
 	// field.cells = [ {x: 0, y: 0, status: ship/void, shipParts: [{x: 4, y: 4},{x: 4, y: 5}], .. , blocked: false, shot: false}, {...}, {...} ]
@@ -52,7 +53,7 @@ export function generateField() {
 
 			// поиск стартовой ячейки, где НЕ стоит корабль
 			do {
-				startCell = getCell(randomCell(field.fieldSize.x, field.fieldSize.y));
+				startCell = getCell(randomCell(field.fieldSize.x, field.fieldSize.y), field);
 				if (startCell.status === "void" && startCell.blocked === false) {
 					break;
 				} 
@@ -86,7 +87,7 @@ export function generateField() {
 			if ( checkCell(startCell) ) {
 				for(let i = 0; i < length; i++) {
 					cellCoords = expandCell(cellCoords, direction);
-					if (!checkCell(getCell(cellCoords))) {
+					if ( !checkCell(getCell(cellCoords, field)) ) {
 						return false
 					}
 				}
@@ -104,7 +105,7 @@ export function generateField() {
 				let currentCellCoords = [cell.x, cell.y];
 				for (let i = 0; i < length; i++) {					
 					// получаем ссылку на нужную ячейку
-					let currentCell = getCell(currentCellCoords);
+					let currentCell = getCell(currentCellCoords, field);
 					// выставляем текущей ячейке статус корабля
 					currentCell.status = "ship";
 					currentCell.blocked = true;
@@ -112,7 +113,7 @@ export function generateField() {
 					currentCell.shipParts = [];
 					let startCellCoords = [cell.x, cell.y];
 					for (let j = 0; j < length; j ++) {
-						let startCell = getCell(startCellCoords);
+						let startCell = getCell(startCellCoords, field);
 						currentCell.shipParts.push(
 							{x: startCell.x, y: startCell.y}
 						);
@@ -146,8 +147,8 @@ export function generateField() {
 						// если корабль стоит вертикально, добавляем в cellsAroundShip соседние ячейки по горизонтали
 						case 'up':
 						case 'down':
-							let leftCell = getCell(expandCell(cell, 'left')); 
-							let rightCell = getCell(expandCell(cell, 'right'));
+							let leftCell = getCell(expandCell(cell, 'left'), field); 
+							let rightCell = getCell(expandCell(cell, 'right'), field);
 							for (let c of [leftCell, rightCell]) {
 								if (c) {
 									c.blocked = true;
@@ -158,8 +159,8 @@ export function generateField() {
 						// и наоборот
 						case 'left':
 						case 'right':
-							let topCell = getCell(expandCell(cell, 'up')); 
-							let bottomCell = getCell(expandCell(cell, 'down'));
+							let topCell = getCell(expandCell(cell, 'up'), field); 
+							let bottomCell = getCell(expandCell(cell, 'down'), field);
 							for (let c of [topCell, bottomCell]) {
 								if (c) {
 									c.blocked = true;
@@ -181,9 +182,9 @@ export function generateField() {
 
 					function setButtIndent(direction, isFirst) {
 						let dir = getDirectionForIndent(direction, isFirst);
-						let centerCell = getCell(expandCell(cell, dir[0]));
-						let cell2 = getCell(expandCell(centerCell, dir[1]));
-						let cell3 = getCell(expandCell(centerCell, dir[2]));
+						let centerCell = getCell(expandCell(cell, dir[0]), field);
+						let cell2 = getCell(expandCell(centerCell, dir[1]), field);
+						let cell3 = getCell(expandCell(centerCell, dir[2]), field);
 						for (let c of [centerCell, cell2, cell3]) {
 							if (c) {
 								c.blocked = true;
@@ -218,121 +219,6 @@ export function generateField() {
 					}
 				}
 			}			
-			
-			function checkCell(cell) {
-				// принимает ссылку на ячейку
-				// проверка ячейки, является ли она пустой (status: void)
-				if (!cell) return false;
-
-				if (cell.status === 'void' && cell.blocked === false) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-
-			function expandCell(coords, direction) {
-				// принмает координаты ячейки и направление
-				// возвращает координаты следующей ячейки в указанном направлении
-
-				let newCoords;				
-				if (Array.isArray(coords)) {
-					// если входные координаты в виде массива
-					switch (direction) {
-						case 'up':
-							newCoords = [coords[0], coords[1]-1];
-						break;
-						case 'down':
-							newCoords = [coords[0], coords[1]+1];
-						break;
-						case 'left':
-							newCoords = [coords[0]-1, coords[1]];
-						break;
-						case 'right':
-							newCoords = [coords[0]+1, coords[1]];
-						break;
-					}
-					
-				} else {
-					// если входные координаты в виде объекта
-					switch (direction) {
-						case 'up':
-							newCoords = [coords.x, coords.y-1];
-						break;
-						case 'down':
-							newCoords = [coords.x, coords.y+1];
-						break;
-						case 'left':
-							newCoords = [coords.x-1, coords.y];
-						break;
-						case 'right':
-							newCoords = [coords.x+1, coords.y];
-						break;
-					}
-				}
-				
-				return newCoords;
-			}
-		}	
-
-		function randomCell(width, heigth) {
-			// Возвращает рандомные координаты ячейки на поле
-			return { x: randomInteger(0, width), y: randomInteger(0, heigth) };
-		}
-
-		function getCell(coords) {
-			// получение ссылки на ячейку с указанными координатами
-			let cell;
-			if (Array.isArray(coords)) {
-				cell = field.cells.filter((item) => {
-					return item.x == coords[0] && item.y == coords[1];
-				});
-			} else {
-				cell = field.cells.filter((item) => {
-					return item.x == coords.x && item.y == coords.y;
-				});
-			}
-			
-
-			// возвращаем ссылку на ячейку, либо false, если совпадений не найдено
-			if (cell.length != 0) {
-				return cell[0];
-			} else {
-				return false;
-			}
-		}
-
-		function mixUpValues(array=['up', 'down', 'left', 'right']) {
-			// перемешивает входной массив и возвращает его
-
-			// создаем независимую копию входного массива
-			let inputArray = [].concat(array);
-			let newArray = [];
-			
-			while (inputArray.length > 0) {
-				// поиск рандомного значения из входного массива
-				let x = returnRandomValue(inputArray);
-				// удаление этого значения из входного массива
-				inputArray = inputArray.filter(item => {
-					return x != item;
-				});
-				// добавляем значение в новый массив
-				newArray.push(x);	
-			}
-
-			function returnRandomValue(valueArray) {
-				let x = randomInteger(0, valueArray.length-1);
-				return valueArray[x];
-			}
-
-			return newArray;
-		}
-
-		function randomInteger(min, max) {
-			// случайное число от min до max
-			let rand = min + Math.random() * (max - min);
-			return Math.floor(rand);
-		}
-		
+		}		
 	}
 }
