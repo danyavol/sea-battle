@@ -1,24 +1,88 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="ru">
     <head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<title>Sea Battle</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		<link  rel="stylesheet/less" href="css/style.less" type="text/css">
+		<link href="favicon.ico" rel="shortcut icon" type="image/x-icon">
     </head>
     <body>
-		<div class="controls">
-			<div id="newGame">New Game</div>
-		</div>
-		 <div id="playGround">
-			<div id="status">Ход игрока слева..</div>
-			<div class="fields">
-				<div id="field1"></div>
-				<div id="field2"></div>
+		<!-- Main menu -->
+		<div class="container" id="mainMenu">
+			<div class="row justify-content-center">
+				<div class="col text-center main-menu_title">
+					Морской бой
+				</div>
 			</div>
-		 </div>
+
+			<div class="row justify-content-center">
+				<div id="headingOne" class="col-10 col-md-6 main-menu_button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+					Новая игра
+				</div>
+			</div>
+			<div id="collapseOne" class="collapse" aria-labelledby="headingOne">
+				<div class="row justify-content-center">
+					<div class="col-10 col-md-6 text-center">
+						<button id="pvp" type="button" class="btn btn-outline-primary main-menu_start-game" data-toggle="collapse" data-target="#collapseOne">
+							Игрок против игрока
+						</button>
+					</div>
+				</div>
+				<div class="row justify-content-center">
+					<div class="col-10 col-md-6 text-center">
+						<button id="pve" type="button" class="btn btn-outline-primary main-menu_start-game" data-toggle="collapse" data-target="#collapseOne">
+							Игрок против компьютера
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="row justify-content-center">
+					<div id="stats" class="col-10 col-md-6 main-menu_button">Статистика</div> 
+			</div>
+		</div>
+
+		<!-- Game -->
+		<div class="container" id="game" style="display: none;">
+			<div class="row justify-content-end">
+				<button type="button" class="btn btn-secondary goto-menu">Главное меню</button>
+			</div>
+			 <div class="playGround">
+				<div id="status">Ход игрока слева..</div>
+				<div class="fields justify-content-center">
+					<div id="field1"></div>
+					<div id="field2"></div>
+				</div>
+			 </div>
+		</div>
+
+		<!-- Statistic -->
+		<div class="container" id="statistic" style="display: none;">
+			<div class="row justify-content-end">
+				<button type="button" class="btn btn-secondary goto-menu">Главное меню</button>
+			</div>
+			<table class="table" id="statTable">
+				<thead>
+					<tr>
+					<th scope="col">#</th>
+					<th scope="col">Режим</th>
+					<th scope="col">Победитель</th>
+					<th scope="col">Дата</th>
+					</tr>
+				</thead>
+				<tbody>
+
+				</tbody>
+			</table>
+		</div>
+		
 		 
 		<script src="js/less.min.js" ></script>
 		<script src="js/main.js" type="module"></script>
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     </body>
 </html>

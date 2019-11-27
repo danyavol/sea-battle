@@ -1,6 +1,7 @@
 'use strict'
 import { shot } from '../shot.js';
 import { easyBot } from '../easyBot.js';
+import { statisticAdd } from '../statistic.js';
 
 export function startPvEasyBot(myFieldObject, myFieldId, enemyFieldObject, enemyFieldId) {
 
@@ -9,7 +10,7 @@ export function startPvEasyBot(myFieldObject, myFieldId, enemyFieldObject, enemy
     const status = document.getElementById('status');
 
     // Добавление события на нажатие по ячейке
-	for ( let elem of enemyField.getElementsByClassName('cell') ) {
+	for ( let elem of enemyField.getElementsByClassName('field-cell') ) {
 		elem.addEventListener('click', myShot);
     }
     
@@ -22,7 +23,7 @@ export function startPvEasyBot(myFieldObject, myFieldId, enemyFieldObject, enemy
 
 		if (answer) {
 			// удаляем события первого поля
-			for ( let elem of enemyField.getElementsByClassName('cell') ) {
+			for ( let elem of enemyField.getElementsByClassName('field-cell') ) {
 				elem.removeEventListener('click', myShot);
 			}
 
@@ -33,7 +34,8 @@ export function startPvEasyBot(myFieldObject, myFieldId, enemyFieldObject, enemy
                 }, 1200);
 				
 			} else {
-				status.innerText = 'Вы победили!';
+                status.innerText = 'Вы победили!';
+                statisticAdd({mode: 'Игрок / Комп.', winner: 'Игрок'});
 			}
 		}
 
@@ -51,7 +53,7 @@ export function startPvEasyBot(myFieldObject, myFieldId, enemyFieldObject, enemy
 
         if (answer.status === 'next') {
             // добавляем события первого поля
-            for ( let elem of enemyField.getElementsByClassName('cell') ) {
+            for ( let elem of enemyField.getElementsByClassName('field-cell') ) {
                 elem.addEventListener('click', myShot);
             }
 
@@ -62,6 +64,7 @@ export function startPvEasyBot(myFieldObject, myFieldId, enemyFieldObject, enemy
             }, 1800);
         } else if (answer.status === 'win') {
             status.innerText = 'Компьютер победил!';
+            statisticAdd({mode: 'Игрок / Комп.', winner: 'Комп.'});
         }
 	}
 

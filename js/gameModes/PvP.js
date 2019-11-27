@@ -1,14 +1,16 @@
 'use strict'
 import { shot } from '../shot.js';
+import { statisticAdd } from '../statistic.js';
 
 export function startPvP(myField, field1, enemyField, field2) {
 
     // Добавление события на нажатие по ячейке
-	for ( let elem of field1.getElementsByClassName('cell') ) {
+	for ( let elem of field1.getElementsByClassName('field-cell') ) {
 		elem.addEventListener('click', myShot);
     }
-    
-    document.getElementById('status').innerText = 'Ход игрока слева..';
+	
+	const status = document.getElementById('status');
+    status.innerText = 'Ход игрока 1..';
 	
 
 	function myShot(event) {
@@ -17,21 +19,22 @@ export function startPvP(myField, field1, enemyField, field2) {
 
 		if (answer) {
 			// удаляем события первого поля
-			for ( let elem of field1.getElementsByClassName('cell') ) {
+			for ( let elem of field1.getElementsByClassName('field-cell') ) {
 				elem.removeEventListener('click', myShot);
 			}
 
-			document.getElementById('status').innerText = '';
+			status.innerText = '';
 
 			if (answer != 'win') {
 				// и добавляем события другого поля
-				for ( let elem of field2.getElementsByClassName('cell') ) {
+				for ( let elem of field2.getElementsByClassName('field-cell') ) {
 					elem.addEventListener('click', enemyShot);
 				}
 
-				document.getElementById('status').innerText = 'Ход игрока справа..';
+				status.innerText = 'Ход игрока 2..';
 			} else {
-				alert ('Победил игрок слева!');
+				status.innerText = 'Победил игрок 1!';
+				statisticAdd({ mode: 'Игрок / Игрок', winner: 'Игрок 1'});
 			}
 		}
 
@@ -44,21 +47,22 @@ export function startPvP(myField, field1, enemyField, field2) {
 
 		if (answer) {
 			// удаляем события первого поля
-			for ( let elem of field2.getElementsByClassName('cell') ) {
+			for ( let elem of field2.getElementsByClassName('field-cell') ) {
 				elem.removeEventListener('click', enemyShot);
 			}
 
-			document.getElementById('status').innerText = '';
+			status.innerText = '';
 
 			if (answer != 'win') {
 				// и добавляем события другого поля
-				for ( let elem of field1.getElementsByClassName('cell') ) {
+				for ( let elem of field1.getElementsByClassName('field-cell') ) {
 					elem.addEventListener('click', myShot);
 				}
 
-				document.getElementById('status').innerText = 'Ход игрока слева..';
+				status.innerText = 'Ход игрока 1..';
 			} else {
-				alert ('Победил игрок cправа!');
+				status.innerText = 'Победил игрок 2!';
+				statisticAdd({ mode: 'Игрок / Игрок', winner: 'Игрок 2'});
 			}
 		}
 	}

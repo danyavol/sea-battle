@@ -1,28 +1,36 @@
+@import 'mainMenu';
+
+
 @cell: 30px;
 
 body {
     margin: 0;
+    background-image: url('../images/bg.png');
+    background-color: floralwhite;
 }
 
-#playGround {
+.goto-menu {
+    margin: 10px;
+}
+
+
+.playGround {
 
     .fields {
         display: flex;
         flex-wrap: wrap;
 
         #field1, #field2 {
-            margin: 0 0 15px 15px;
-            width: @cell*10 + 20px;
-            height: @cell*10 + 20px;
-            border: 1px solid rgba(0,0,0,0.2);
+            margin: 10px;
+            //border: 1px solid rgba(0,0,0,0.2);
         
-            .row {
+            .field-row {
                 display: flex;
-                width: 100%;
         
-                .cell {
+                .field-cell {
                     height: @cell;
                     width: @cell;
+                    display: inline-block;
                     border: 1px solid rgba(0,0,0,0.2);
                     background-size: cover;
                     background-repeat: no-repeat;
@@ -33,7 +41,9 @@ body {
                 }
                 
                 .void, .blocked {
-                    background-color: #fffaf0;
+                    background-color: white; 
+                    // #fffaf0
+                    // papayawhip
                 }
                 
                 .miss {
@@ -68,10 +78,7 @@ body {
     }
 }
 
-
-
 #status {
     font-size: 24px;
     margin: 10px 0 10px 15px;
 }
-
