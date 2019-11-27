@@ -38,14 +38,12 @@ export function statisticAdd(obj) {
 export function statisticUpdate() {
     let tbody = document.querySelector('#statTable tbody');
 
-    let stats = JSON.parse( localStorage.getItem('stats') );
+    let stats = localStorage.getItem('stats');
      
     if (!stats) {
-        tbody.innerHTML = '';
-        let h5 = document.createElement('h5');
-        h5.innerText = 'Записей пока нет.';
-        document.querySelector('#statistic').appendChild(h5);
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center">Записей пока нет.</td></tr>`;
     } else {
+        stats = JSON.parse(stats);
         tbody.innerHTML = '';
         for (let item of stats) {
             let tr = document.createElement('tr');
