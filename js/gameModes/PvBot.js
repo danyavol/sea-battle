@@ -14,7 +14,6 @@ export class PvBot extends PlayerShot {
     }
 
     start() {
-        const myField = document.getElementById(this.myFieldId);
         const enemyField = document.getElementById(this.enemyFieldId);
         const status = document.getElementById('status');
 
@@ -23,10 +22,7 @@ export class PvBot extends PlayerShot {
             elem.addEventListener('click', myShot);
         }
 
-        let myFieldObject = this.myFieldObject;
-        let myFieldId = this.myFieldId;
         let enemyFieldObject = this.enemyFieldObject;
-        let enemyFieldId = this.enemyFieldId;
         
         status.innerText = 'Ваш ход..';
 
@@ -44,7 +40,7 @@ export class PvBot extends PlayerShot {
                     status.innerText = 'Ход компьютера..';
                     setTimeout(() => {
                         enemyShot();
-                    }, 1200);
+                    }, 1000);
                     
                 } else {
                     status.innerText = 'Вы победили!';
@@ -53,6 +49,9 @@ export class PvBot extends PlayerShot {
             }
     
         }
+
+        let myFieldObject = this.myFieldObject;
+        let myFieldId = this.myFieldId;
     
         function enemyShot(prevShot) {
     
@@ -77,7 +76,7 @@ export class PvBot extends PlayerShot {
             } else if (answer.status === 'again') {
                 setTimeout(() => {
                     enemyShot(answer);
-                }, 1800);
+                }, 1000);
             } else if (answer.status === 'win') {
                 status.innerText = 'Компьютер победил!';
                 statisticAdd({mode: 'Игрок / Комп.', winner: 'Комп.'});
