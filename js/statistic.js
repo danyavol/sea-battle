@@ -26,8 +26,10 @@ export function statisticAdd(obj) {
             day = now.getDate(),
             hour = now.getHours(),
             minute = now.getMinutes();
-        if (minute < 10) minute = '0'+minute;
-        if (hour < 10) hour = '0'+hour;
+        if (month < 10) month = '0' + month;
+        if (day < 10) day = '0' + day;
+        if (minute < 10) minute = '0' + minute;
+        if (hour < 10) hour = '0' + hour;
 
         return `${day}.${month}.${year} ${hour}:${minute}`;
     }

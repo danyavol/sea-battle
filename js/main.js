@@ -1,7 +1,7 @@
 'use strict'
-import { generateField } from './genField.js';
-import { startPvP } from './gameModes/PvP.js'
-import { startPvEasyBot } from './gameModes/PvEasyBot.js';
+import { Field } from './genField.js';
+import { PvP } from './gameModes/PvP.js'
+import { PvBot } from './gameModes/PvBot.js';
 import { statisticUpdate } from './statistic.js';
 
 const field1 = document.getElementById('field1');
@@ -31,8 +31,10 @@ function showStats() {
 }
 
 function startGame(event) {
-	let myField = generateField();
-	let enemyField = generateField();
+	let mf = new Field();
+	const myField = mf.generateField();
+	let ef = new Field();
+	const enemyField = ef.generateField();
 
 	document.getElementById('mainMenu').style = 'display: none;';
 	document.getElementById('statistic').style = 'display: none;';
@@ -76,9 +78,11 @@ function startGame(event) {
 	}
 
 	if (event.target.id === 'pve') {
-		startPvEasyBot(myField, 'field1', enemyField, 'field2');
+		let sp = new PvBot(myField, 'field1', enemyField, 'field2');
+		sp.start();
 	} else if ( event.target.id === 'pvp') {
-		startPvP(myField, field1, enemyField, field2);
+		let sp = new PvP(myField, field1, enemyField, field2);
+		sp.start();
 	}
 	
 }
